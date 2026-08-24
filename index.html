@@ -72,6 +72,8 @@
   .tile{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 6px 10px;text-align:center;text-decoration:none;color:var(--text);font-size:.72rem;line-height:1.25;font-weight:600}
   .tile:hover{border-color:var(--link);text-decoration:none}
   .tile img{width:44px;height:44px;border-radius:9px;background:#fff;padding:3px;object-fit:contain;display:block;margin:0 auto 7px}
+  .tile .num{display:block;font-size:1.15rem;font-weight:800;color:var(--link);margin-bottom:4px;letter-spacing:.3px}
+  .tile .num.red{color:var(--red)}
   .video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
   .video-wrap{position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000}
   .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -105,6 +107,16 @@
 <div class="note"><strong>Situation as last verified Sun night → Mon morning, Aug 24, 2026 (this ages fast — trust the live links above):</strong> The Hawk Fire started Saturday Aug 22 northwest of Reno and has burned 15,000+ acres at 0% containment across Washoe and Sierra counties. Roughly 42,000 people are under evacuation orders and ~45,000 more under evacuation warnings (~13,700 residences in the evacuation area). Gov. Lombardo declared a state of emergency and mobilized the National Guard; six injuries have been reported, Northwest Specialty Hospital evacuated patients as a precaution, and Washoe County schools, TMCC, and Coral Academy canceled classes for Monday Aug 24.</div>
 
 <div class="note" style="border-left-color:var(--link)"><strong>ℹ️ Free community resource — no promises; verify before you act.</strong> This page is provided free of charge, as an information aid only. It makes no representations, warranties, or guarantees of any kind — including accuracy, completeness, or availability of anything listed. Conditions, offers, shelter statuses, and road access change by the minute: <strong>always confirm with the official source or phone number before traveling or acting on anything here</strong>, and always follow instructions from emergency officials over this page. Use of this page and the linked resources is entirely at your own risk; the maintainers accept no liability for errors, omissions, or outcomes. All links, logos, and phone numbers belong to their respective organizations — no affiliation or endorsement is implied.</div>
+
+<h2 class="section">📞 Key numbers at a glance <span style="font-weight:400;font-size:.8rem;color:var(--muted)">(tap to call)</span></h2>
+<div class="tiles">
+  <a class="tile" href="tel:911"><span class="num red">911</span>Immediate emergencies only — threat to life or property</a>
+  <a class="tile" href="tel:311"><span class="num">3-1-1</span>Evacuation questions &amp; local info</a>
+  <a class="tile" href="tel:7752446988"><span class="num">775-244-6988</span>Hawk Fire public information line</a>
+  <a class="tile" href="tel:8007332767"><span class="num">800-733-2767</span>Red Cross disaster assistance</a>
+  <a class="tile" href="tel:211"><span class="num">2-1-1</span>Nevada 211 — shelter, food, utilities, transport</a>
+  <a class="tile" href="tel:7753313663"><span class="num">775-331-3663</span>Food Bank of Northern Nevada</a>
+</div>
 
 <h2 class="section">⚡ Official agencies — one tap</h2>
 <div class="tiles">
@@ -205,8 +217,8 @@
   <div class="card">
     <h3>Food &amp; essential needs</h3>
     <ul>
-      <li><strong>Food Bank of Northern Nevada</strong> · <a href="tel:7753313663">775-331-3663</a><span class="why">Distributions are <u>not</u> at the warehouse — use the Food Finder on <a href="https://fbnn.org/" target="_blank" rel="noopener">fbnn.org</a> or call to find a nearby pantry.</span></li>
-      <li><strong>Catholic Charities of Northern Nevada</strong><span class="why"><a href="https://maps.google.com/?q=500+E+Fourth+St,+Reno,+NV" target="_blank" rel="noopener">500 E Fourth St, Reno</a> (St. Vincent's Food Pantry) · General <a href="tel:7753227073">775-322-7073</a> · Emergency/support <a href="tel:7753227074">775-322-7074</a> · <a href="https://ccsnn.org/" target="_blank" rel="noopener">ccsnn.org</a></span></li>
+      <li><strong>Food Bank of Northern Nevada</strong> · <a href="tel:7753313663">775-331-3663</a><span class="why">Distributions are <u>not</u> at the warehouse — use the <a href="https://www.fbnn.org/gethelp/foodfinder/" target="_blank" rel="noopener">Food Finder</a> or <a href="https://www.fbnn.org/gethelp/" target="_blank" rel="noopener">Get Help</a> page, or call to find a nearby pantry.</span></li>
+      <li><strong>Catholic Charities of Northern Nevada</strong><span class="why"><a href="https://maps.google.com/?q=500+E+Fourth+St,+Reno,+NV" target="_blank" rel="noopener">500 E Fourth St, Reno</a> (St. Vincent's Food Pantry) · General <a href="tel:7753227073">775-322-7073</a> · Emergency/support <a href="tel:7753227074">775-322-7074</a> · <a href="https://ccsnn.org/pages/st-marguerite-support-services" target="_blank" rel="noopener">support services</a></span></li>
       <li><strong>Nevada 211</strong> — dial 2-1-1<span class="why">Shelter, housing, food, utilities, transportation, expense help. Call center Mon–Fri 9 AM–9 PM PT; <a href="https://www.nevada211.org/" target="_blank" rel="noopener">online search 24/7</a>.</span></li>
     </ul>
   </div>
@@ -217,7 +229,7 @@
       <li>Dough Cheese Sauce — 600 S Center St, Suite 200, Reno</li>
       <li>R Town Pizza — 180 W Peckham Ln, Suite 1100, Reno</li>
       <li>Kitty Kisses Cat Cafe — 8555 Double R Blvd, Suite 104, Reno<span class="why">Reported accepting cat supplies and offering a cooled daytime space.</span></li>
-      <li><span class="why">Never travel into closed or evacuated areas to reach services — evacuation orders and road closures come first.</span></li>
+      <li><span class="why">Never travel into closed or evacuated areas to reach services — evacuation orders and road closures come first. Source: <a href="https://sierranevadaally.org/2026/08/23/hawk-fire-where-to-find-evacuation-information-shelter-and-ways-you-can-help/" target="_blank" rel="noopener">Sierra Nevada Ally's continuously updated roundup</a>.</span></li>
     </ul>
   </div>
 </div>
@@ -229,13 +241,13 @@
     <ul>
       <li><strong>Reno-Sparks Convention Center — Hall 4</strong> <span class="tag open">OPEN</span><span class="why"><a href="https://maps.google.com/?q=4590+S+Virginia+St,+Reno,+NV" target="_blank" rel="noopener">4590 S. Virginia St, Reno</a> — enter from Kietzke Lane, Door 20F. Do not bring pets here.</span></li>
       <li><strong>Evelyn Mount Community Center</strong> <span class="tag full">AT CAPACITY (as of 8/23 night)</span><span class="why"><a href="https://maps.google.com/?q=1301+Valley+Rd,+Reno,+NV" target="_blank" rel="noopener">1301 Valley Rd, Reno</a></span></li>
-      <li><a href="https://www.redcross.org/local/nevada.html" target="_blank" rel="noopener">American Red Cross — Northern Nevada</a><span class="why">Shelter support · 1-800-733-2767 (1-800-RED-CROSS)</span></li>
+      <li><a href="https://www.redcross.org/about-us/news-and-events/news/2026/hawk-fire-burns-near-reno--nevada.html" target="_blank" rel="noopener">American Red Cross — official Hawk Fire page</a><span class="why">Disaster assistance <a href="tel:8007332767">800-733-2767</a>. You can get Red Cross help — meals, water, health services, emergency assistance — <u>even if you don't stay overnight</u>.</span></li>
     </ul>
   </div>
   <div class="card">
     <h3>Pets &amp; livestock</h3>
     <ul>
-      <li><strong>Small animals:</strong> Washoe County Regional Animal Services<span class="why"><a href="https://maps.google.com/?q=2825+Longley+Ln,+Reno,+NV" target="_blank" rel="noopener">2825 Longley Ln, Reno</a></span></li>
+      <li><strong>Small animals:</strong> <a href="https://www.washoecounty.gov/animal/" target="_blank" rel="noopener">Washoe County Regional Animal Services</a><span class="why"><a href="https://maps.google.com/?q=2825+Longley+Ln,+Reno,+NV" target="_blank" rel="noopener">2825 Longley Ln, Reno</a> — confirm current intake before traveling.</span></li>
       <li><strong>Large animals / livestock:</strong> Ironwood Events Center<span class="why"><a href="https://maps.google.com/?q=5600+Whiskey+Springs+Rd,+Reno,+NV" target="_blank" rel="noopener">5600 Whiskey Springs Rd, Reno</a> — second driveway, check in at the main office.</span></li>
     </ul>
   </div>
@@ -317,6 +329,7 @@
     <ul>
       <li>Text your manager or post in the team channel: <strong>SAFE</strong> / <strong>EVACUATED — [where you're headed]</strong> / <strong>NEED HELP</strong></li>
       <li>Work comes second. If you're in a warning or evacuation zone, take care of your family first — no questions asked.</li>
+      <li>When it's safe, check on coworkers — and share this page with any employee or family member who needs it.</li>
       <li>Keep receipts for hotels, meals, and supplies if you evacuate — for insurance and any assistance claims.</li>
       <li><a href="wabtec-employee-guide-2026-08-24.pdf" target="_blank" rel="noopener">📄 Printable employee resource guide (PDF)</a><span class="why">Hotels, food, shelters, and phone numbers on one printable page — compiled Aug 24. Not an official Wabtec, county, or fire-agency publication.</span></li>
       <li><em>[Company contacts — HR phone/email and emergency policy go here. Ask Angel to fill these in.]</em></li>
