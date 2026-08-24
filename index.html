@@ -68,6 +68,15 @@
   .tag.full{background:#3b2a12;color:var(--amber)}
   .checklist li::before{content:"☐ ";color:var(--muted)}
 
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:12px 0 4px}
+  .tile{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 6px 10px;text-align:center;text-decoration:none;color:var(--text);font-size:.72rem;line-height:1.25;font-weight:600}
+  .tile:hover{border-color:var(--link);text-decoration:none}
+  .tile img{width:44px;height:44px;border-radius:9px;background:#fff;padding:3px;object-fit:contain;display:block;margin:0 auto 7px}
+  .video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+  .video-wrap{position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000}
+  .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video-cap{font-size:.8rem;color:var(--muted);margin-top:6px}
+
   .company{border:1px solid var(--amber);background:#211b0f}
   footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
   footer p{margin-bottom:6px}
@@ -95,6 +104,22 @@
 
 <div class="note"><strong>Situation as last verified Sun night → Mon morning, Aug 24, 2026 (this ages fast — trust the live links above):</strong> The Hawk Fire started Saturday Aug 22 northwest of Reno and has burned 15,000+ acres at 0% containment across Washoe and Sierra counties. Roughly 42,000 people are under evacuation orders and ~45,000 more under evacuation warnings (~13,700 residences in the evacuation area). Gov. Lombardo declared a state of emergency and mobilized the National Guard; six injuries have been reported, Northwest Specialty Hospital evacuated patients as a precaution, and Washoe County schools, TMCC, and Coral Academy canceled classes for Monday Aug 24.</div>
 
+<h2 class="section">⚡ Official agencies — one tap</h2>
+<div class="tiles">
+  <a class="tile" href="https://perimetermap.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=perimetermap.com&sz=128" alt="" loading="lazy">Perimeter Map</a>
+  <a class="tile" href="https://www.emergencywashoe.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=emergencywashoe.com&sz=128" alt="" loading="lazy">Emergency Washoe</a>
+  <a class="tile" href="https://www.washoecounty.gov/em/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=washoecounty.gov&sz=128" alt="" loading="lazy">Washoe County EM</a>
+  <a class="tile" href="https://www.watchduty.org/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=watchduty.org&sz=128" alt="" loading="lazy">Watch Duty</a>
+  <a class="tile" href="https://www.weather.gov/rev/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=weather.gov&sz=128" alt="" loading="lazy">NWS Reno</a>
+  <a class="tile" href="https://fire.airnow.gov/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=airnow.gov&sz=128" alt="" loading="lazy">AirNow Smoke</a>
+  <a class="tile" href="https://www.fema.gov/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=fema.gov&sz=128" alt="" loading="lazy">FEMA</a>
+  <a class="tile" href="https://www.redcross.org/local/nevada.html" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=redcross.org&sz=128" alt="" loading="lazy">Red Cross NV</a>
+  <a class="tile" href="https://www.fire.ca.gov/incidents" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=fire.ca.gov&sz=128" alt="" loading="lazy">CAL FIRE</a>
+  <a class="tile" href="https://www.nvenergy.com/outages-and-emergencies/view-current-outages" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=nvenergy.com&sz=128" alt="" loading="lazy">NV Energy</a>
+  <a class="tile" href="https://www.nvroads.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=nvroads.com&sz=128" alt="" loading="lazy">511 Nevada</a>
+  <a class="tile" href="https://www.nevada211.org/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=nevada211.org&sz=128" alt="" loading="lazy">211 Nevada</a>
+</div>
+
 <h2 class="section">📡 Live right now</h2>
 <div class="live-grid">
   <div class="panel">
@@ -111,6 +136,18 @@
     <h3>💨 Wind &amp; conditions — Reno <span class="upd" id="windUpd"></span></h3>
     <div id="wind"><span class="err">Loading conditions…</span></div>
     <div class="small">Strong or shifting wind = fast fire spread. Forecast: <a href="https://forecast.weather.gov/MapClick.php?lat=39.5296&lon=-119.8138" target="_blank" rel="noopener">weather.gov Reno</a></div>
+  </div>
+</div>
+
+<h2 class="section">▶️ Live video updates</h2>
+<div class="video-grid">
+  <div>
+    <div class="video-wrap"><iframe src="https://www.youtube.com/embed/videoseries?list=UU_opcefdzIh27TitnW4_WTw" title="Severe Weather USA — latest videos" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
+    <div class="video-cap">▶️ <a href="https://www.youtube.com/@SevereWeatherUSA" target="_blank" rel="noopener">Severe Weather USA</a> — always shows the channel's newest uploads. Tap the ☰ playlist icon in the player for more videos.</div>
+  </div>
+  <div>
+    <div class="video-wrap"><iframe src="https://www.youtube.com/embed/videoseries?list=UUOHOdDLbi3q_FuN49ncab5Q" title="KOLO 8 News Now — latest videos" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
+    <div class="video-cap">▶️ <a href="https://www.youtube.com/@KOLO8NewsNow" target="_blank" rel="noopener">KOLO 8 News Now</a> — Reno's local coverage, newest uploads first.</div>
   </div>
 </div>
 
@@ -227,7 +264,7 @@
   </div>
 </div>
 
-<h2 class="section">🏢 Red Rock OPS team check-in</h2>
+<h2 class="section">🏢 Team check-in</h2>
 <div class="cards">
   <div class="card company">
     <h3>If you're affected, check in</h3>
