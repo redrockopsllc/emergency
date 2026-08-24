@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hawk Fire — Red Rock OPS Emergency Dashboard</title>
+<meta name="description" content="Live Hawk Fire resources for Red Rock OPS employees in the Reno area: evacuation zones, shelters, air quality, road closures, and official updates.">
+<meta property="og:title" content="Hawk Fire — Red Rock OPS Emergency Dashboard">
+<meta property="og:description" content="Live evacuation zones, shelters, air quality, and official updates for the Reno area.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+<style>
+  :root{
+    --bg:#0e1116; --card:#171c24; --card2:#1d232e; --line:#2a3342;
+    --text:#e8edf4; --muted:#9aa7b8; --link:#7db4ff;
+    --red:#e5484d; --red-dark:#8f1d21; --amber:#f5a524; --green:#3dd68c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-text-size-adjust:100%}
+  a{color:var(--link)}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 14px 60px}
+
+  header{padding:18px 0 10px;border-bottom:1px solid var(--line)}
+  header h1{font-size:1.45rem;letter-spacing:.3px}
+  header .sub{color:var(--muted);font-size:.9rem;margin-top:2px}
+  .stamp{color:var(--muted);font-size:.8rem;margin-top:6px}
+  .stamp strong{color:var(--text)}
+
+  .banner{background:linear-gradient(135deg,var(--red-dark),#5c1013);border:1px solid var(--red);border-radius:12px;padding:16px;margin:16px 0}
+  .banner h2{font-size:1.05rem;margin-bottom:8px}
+  .banner p{font-size:.92rem;margin-bottom:10px}
+  .btnrow{display:flex;flex-wrap:wrap;gap:10px}
+  .btn{display:block;flex:1 1 220px;text-align:center;background:#fff;color:#111;font-weight:700;text-decoration:none;padding:13px 14px;border-radius:9px;font-size:.95rem}
+  .btn.primary{background:var(--red);color:#fff}
+  .btn:hover{filter:brightness(1.08);text-decoration:none}
+
+  .note{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:8px;padding:10px 12px;font-size:.88rem;color:var(--muted);margin:14px 0}
+  .note strong{color:var(--text)}
+
+  h2.section{font-size:1.1rem;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+
+  .live-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .panel h3{font-size:.95rem;margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .panel h3 .upd{font-size:.72rem;color:var(--muted);font-weight:400;white-space:nowrap}
+  .aqi-big{font-size:2.3rem;font-weight:800;line-height:1}
+  .aqi-label{font-weight:700;font-size:1rem;margin-top:2px}
+  .aqi-advice,.small{color:var(--muted);font-size:.85rem;margin-top:6px}
+  .wind-big{font-size:1.5rem;font-weight:700}
+  .alert-card{border:1px solid var(--line);border-left:4px solid var(--red);border-radius:8px;padding:9px 11px;margin-bottom:8px;background:var(--card2)}
+  .alert-card.moderate{border-left-color:var(--amber)}
+  .alert-card h4{font-size:.9rem}
+  .alert-card .meta{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .alert-card details{margin-top:6px;font-size:.83rem;color:var(--muted)}
+  .alert-card summary{cursor:pointer;color:var(--link)}
+  .ok{color:var(--green);font-size:.9rem}
+  .err{color:var(--muted);font-size:.85rem}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px}
+  .card h3{font-size:1rem;margin-bottom:9px}
+  .card ul{list-style:none}
+  .card li{padding:6px 0;border-top:1px solid var(--line);font-size:.9rem}
+  .card li:first-child{border-top:none}
+  .card .why{display:block;color:var(--muted);font-size:.8rem}
+  .tag{display:inline-block;font-size:.7rem;font-weight:700;padding:1px 7px;border-radius:20px;vertical-align:middle;margin-left:4px}
+  .tag.open{background:#123b2a;color:var(--green)}
+  .tag.full{background:#3b2a12;color:var(--amber)}
+  .checklist li::before{content:"☐ ";color:var(--muted)}
+
+  .company{border:1px solid var(--amber);background:#211b0f}
+  footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+  footer p{margin-bottom:6px}
+  @media (max-width:480px){ header h1{font-size:1.2rem} .btn{flex-basis:100%} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>🔥 Hawk Fire — Reno Emergency Dashboard</h1>
+  <div class="sub">Red Rock OPS · live resources for our Reno-area team · Washoe &amp; Sierra counties</div>
+  <div class="stamp">Live data refreshes every 5 minutes · Last checked: <strong id="lastChecked">loading…</strong> (Pacific)</div>
+</header>
+
+<div class="banner">
+  <h2>🚨 In immediate danger? Call 911. — Do <u>not</u> call 911 for evacuation info; use the map below.</h2>
+  <p>Official evacuation zones update in real time on Perimeter. <strong>Red = GO NOW (evacuate immediately). Yellow = GET SET (be ready to leave).</strong> If you are told to go — go. Don't wait to see flames.</p>
+  <div class="btnrow">
+    <a class="btn primary" href="https://perimetermap.com/" target="_blank" rel="noopener">🗺️ CHECK YOUR EVACUATION ZONE</a>
+    <a class="btn" href="https://www.emergencywashoe.com/" target="_blank" rel="noopener">📢 EmergencyWashoe.com — official updates</a>
+    <a class="btn" href="https://www.washoecounty.gov/em/regional-alerts/index.php" target="_blank" rel="noopener">🔔 Sign up for Washoe emergency alerts</a>
+  </div>
+</div>
+
+<div class="note"><strong>Situation as last verified Sun night → Mon morning, Aug 24, 2026 (this ages fast — trust the live links above):</strong> The Hawk Fire started Saturday Aug 22 northwest of Reno and has burned 15,000+ acres at 0% containment across Washoe and Sierra counties. Roughly 42,000 people are under evacuation orders and ~45,000 more under evacuation warnings (~13,700 residences in the evacuation area). Gov. Lombardo declared a state of emergency and mobilized the National Guard; six injuries have been reported, Northwest Specialty Hospital evacuated patients as a precaution, and Washoe County schools, TMCC, and Coral Academy canceled classes for Monday Aug 24.</div>
+
+<h2 class="section">📡 Live right now</h2>
+<div class="live-grid">
+  <div class="panel">
+    <h3>⚠️ Active alerts — Reno area (National Weather Service) <span class="upd" id="alertsUpd"></span></h3>
+    <div id="alerts"><span class="err">Loading alerts…</span></div>
+    <div class="small">Source: <a href="https://www.weather.gov/rev/" target="_blank" rel="noopener">NWS Reno</a> · <a href="https://x.com/NWSReno" target="_blank" rel="noopener">@NWSReno</a></div>
+  </div>
+  <div class="panel">
+    <h3>🌫️ Air quality — Reno <span class="upd" id="airUpd"></span></h3>
+    <div id="air"><span class="err">Loading air quality…</span></div>
+    <div class="small">Maps: <a href="https://fire.airnow.gov/" target="_blank" rel="noopener">AirNow Fire &amp; Smoke</a> · <a href="https://map.purpleair.com/" target="_blank" rel="noopener">PurpleAir</a></div>
+  </div>
+  <div class="panel">
+    <h3>💨 Wind &amp; conditions — Reno <span class="upd" id="windUpd"></span></h3>
+    <div id="wind"><span class="err">Loading conditions…</span></div>
+    <div class="small">Strong or shifting wind = fast fire spread. Forecast: <a href="https://forecast.weather.gov/MapClick.php?lat=39.5296&lon=-119.8138" target="_blank" rel="noopener">weather.gov Reno</a></div>
+  </div>
+</div>
+
+<h2 class="section">🗺️ Live fire tracking</h2>
+<div class="cards">
+  <div class="card">
+    <h3>Track the fire</h3>
+    <ul>
+      <li><a href="https://www.watchduty.org/" target="_blank" rel="noopener">Watch Duty</a><span class="why">Best single tracker — verified reporters post evacuations, perimeter, and photos in near-real-time. Get the phone app (below).</span></li>
+      <li><a href="https://perimetermap.com/" target="_blank" rel="noopener">Perimeter Map</a><span class="why">The official Washoe County evacuation-zone and road-closure map. No signup needed.</span></li>
+      <li><a href="https://www.alertwildfire.org/" target="_blank" rel="noopener">ALERTWildfire cameras</a><span class="why">Live mountaintop wildfire cameras around Reno, run by UNR — see conditions with your own eyes.</span></li>
+      <li><a href="https://firms.modaps.eosdis.nasa.gov/map/" target="_blank" rel="noopener">NASA FIRMS satellite map</a><span class="why">Satellite heat detections, updated multiple times daily.</span></li>
+      <li><a href="https://inciweb.wildfire.gov/" target="_blank" rel="noopener">InciWeb</a><span class="why">Federal incident info system — search "Hawk Fire" for official acreage/containment once posted.</span></li>
+      <li><a href="https://www.fire.ca.gov/incidents" target="_blank" rel="noopener">CAL FIRE incidents</a><span class="why">The fire crosses into Sierra County, CA — California-side updates post here.</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>📱 Apps worth installing right now</h3>
+    <ul>
+      <li><a href="https://www.watchduty.org/" target="_blank" rel="noopener">Watch Duty</a> (iOS/Android)<span class="why">Push notifications the moment evacuation zones change. The one to install first.</span></li>
+      <li><a href="https://perimetermap.com/" target="_blank" rel="noopener">Perimeter</a><span class="why">Works in the browser — bookmark it on your phone's home screen.</span></li>
+      <li><a href="https://www.fema.gov/about/news-multimedia/mobile-products" target="_blank" rel="noopener">FEMA app</a><span class="why">National alerts, shelter lookup, disaster assistance info.</span></li>
+      <li><a href="https://www.redcross.org/get-help/how-to-prepare-for-emergencies/mobile-apps.html" target="_blank" rel="noopener">Red Cross Emergency app</a><span class="why">Shelter locations and family "I'm safe" check-in.</span></li>
+      <li><a href="https://www.washoecounty.gov/em/regional-alerts/index.php" target="_blank" rel="noopener">Washoe Regional Alerts (Rave/Smart911)</a><span class="why">Official reverse-notification system — register every phone in your household.</span></li>
+    </ul>
+  </div>
+</div>
+
+<h2 class="section">🏠 Shelters &amp; animal evacuation <span style="font-weight:400;font-size:.8rem;color:var(--muted)">(verified Aug 24 — statuses change; confirm on EmergencyWashoe)</span></h2>
+<div class="cards">
+  <div class="card">
+    <h3>People</h3>
+    <ul>
+      <li><strong>Reno-Sparks Convention Center — Hall 4</strong> <span class="tag open">OPEN</span><span class="why"><a href="https://maps.google.com/?q=4590+S+Virginia+St,+Reno,+NV" target="_blank" rel="noopener">4590 S. Virginia St, Reno</a> — enter from Kietzke Lane, Door 20F. Do not bring pets here.</span></li>
+      <li><strong>Evelyn Mount Community Center</strong> <span class="tag full">AT CAPACITY (as of 8/23 night)</span><span class="why"><a href="https://maps.google.com/?q=1301+Valley+Rd,+Reno,+NV" target="_blank" rel="noopener">1301 Valley Rd, Reno</a></span></li>
+      <li><a href="https://www.redcross.org/local/nevada.html" target="_blank" rel="noopener">American Red Cross — Northern Nevada</a><span class="why">Shelter support · 1-800-733-2767 (1-800-RED-CROSS)</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Pets &amp; livestock</h3>
+    <ul>
+      <li><strong>Small animals:</strong> Washoe County Regional Animal Services<span class="why"><a href="https://maps.google.com/?q=2825+Longley+Ln,+Reno,+NV" target="_blank" rel="noopener">2825 Longley Ln, Reno</a></span></li>
+      <li><strong>Large animals / livestock:</strong> Ironwood Events Center<span class="why"><a href="https://maps.google.com/?q=5600+Whiskey+Springs+Rd,+Reno,+NV" target="_blank" rel="noopener">5600 Whiskey Springs Rd, Reno</a> — second driveway, check in at the main office.</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🛣️ Roads &amp; power</h3>
+    <ul>
+      <li><a href="https://www.nvenergy.com/outages-and-emergencies/view-current-outages" target="_blank" rel="noopener">NV Energy outage map</a><span class="why">Live power outages — fire areas often get safety shutoffs.</span></li>
+      <li><a href="https://www.nvroads.com/" target="_blank" rel="noopener">511 Nevada (nvroads.com)</a><span class="why">State road closures and conditions. Closures also show on Perimeter.</span></li>
+      <li><a href="https://quickmap.dot.ca.gov/" target="_blank" rel="noopener">Caltrans QuickMap</a><span class="why">California-side closures (Sierra County).</span></li>
+      <li><a href="https://www.waze.com/live-map" target="_blank" rel="noopener">Waze live map</a><span class="why">Crowdsourced — helpful, but never drive around a barricade or into smoke.</span></li>
+    </ul>
+  </div>
+</div>
+
+<h2 class="section">📰 Live news &amp; official voices</h2>
+<div class="cards">
+  <div class="card">
+    <h3>Local newsrooms covering it live</h3>
+    <ul>
+      <li><a href="https://www.kunr.org/hawk-fire" target="_blank" rel="noopener">KUNR live blog</a><span class="why">Running updates page dedicated to the Hawk Fire.</span></li>
+      <li><a href="https://www.kolotv.com/" target="_blank" rel="noopener">KOLO 8</a> · <a href="https://www.2news.com/news/fire/" target="_blank" rel="noopener">2 News (KTVN) Fire Watch</a> · <a href="https://mynews4.com/" target="_blank" rel="noopener">News 4 (KRNV)</a></li>
+      <li><a href="https://thisisreno.com/" target="_blank" rel="noopener">This Is Reno</a> · <a href="https://www.rgj.com/" target="_blank" rel="noopener">Reno Gazette Journal</a> · <a href="https://sierranevadaally.org/" target="_blank" rel="noopener">Sierra Nevada Ally</a></li>
+      <li><a href="https://www.unr.edu/nevada-today/news/president-messages/university-updates-on-hawk-fire" target="_blank" rel="noopener">University of Nevada, Reno updates</a><span class="why">If you or family are connected to UNR.</span></li>
+      <li><a href="https://www.youtube.com/@SevereWeatherUSA" target="_blank" rel="noopener">▶️ Severe Weather USA (YouTube)</a><span class="why">Excellent video updates on active severe weather and fire conditions.</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Official accounts on X</h3>
+    <ul>
+      <li><a href="https://x.com/WashoeCounty" target="_blank" rel="noopener">@WashoeCounty</a><span class="why">County emergency management announcements.</span></li>
+      <li><a href="https://x.com/CityofReno" target="_blank" rel="noopener">@CityofReno</a><span class="why">City-level closures and updates.</span></li>
+      <li><a href="https://x.com/NWSReno" target="_blank" rel="noopener">@NWSReno</a><span class="why">Wind, red-flag warnings, smoke forecasts.</span></li>
+    </ul>
+  </div>
+</div>
+
+<h2 class="section">🧰 What to do, by zone</h2>
+<div class="cards">
+  <div class="card">
+    <h3>🟡 GET SET zone (evacuation warning)</h3>
+    <ul class="checklist">
+      <li>Pack a go-bag now: meds, documents, chargers, cash, glasses, 3 days of clothes</li>
+      <li>The 6 P's: People &amp; pets · Prescriptions · Papers · Personal needs · Priceless items · Phone</li>
+      <li>Fuel the car; park it nose-out, ready to leave</li>
+      <li>Know two routes out of your neighborhood</li>
+      <li>Photograph/video your home and belongings for insurance</li>
+      <li>Load pets' carriers, leashes, food now — not at the last minute</li>
+      <li>Register for <a href="https://www.washoecounty.gov/em/regional-alerts/index.php" target="_blank" rel="noopener">Washoe alerts</a> and turn on Watch Duty notifications</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🔴 GO NOW zone (evacuation order)</h3>
+    <ul class="checklist">
+      <li>Leave immediately — do not wait to see flames or pack more</li>
+      <li>Take your go-bag, pets, and every person in the household</li>
+      <li>Close windows and doors on your way out</li>
+      <li>Follow posted routes; never drive around barricades or into smoke</li>
+      <li>Text family + your manager: where you're headed and that you're out</li>
+      <li>Do not return until officials clear your zone on <a href="https://perimetermap.com/" target="_blank" rel="noopener">Perimeter</a></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>😮‍💨 Everyone else in the Reno area (smoke)</h3>
+    <ul class="checklist">
+      <li>Watch the AQI panel above — over 150, limit time outdoors</li>
+      <li>Wear an N95/KN95 outside (cloth masks don't stop smoke)</li>
+      <li>Keep windows shut; set HVAC to recirculate</li>
+      <li>No HEPA purifier? <a href="https://www.epa.gov/indoor-air-quality-iaq/research-diy-air-cleaners-reduce-wildfire-smoke-indoors" target="_blank" rel="noopener">Build a box-fan filter (EPA guide)</a></li>
+      <li>Skip outdoor workouts; check on kids, elderly neighbors, and anyone with asthma/heart conditions</li>
+      <li>Feeling overwhelmed? Call or text <strong>988</strong> — free, 24/7</li>
+    </ul>
+  </div>
+</div>
+
+<h2 class="section">🏢 Red Rock OPS team check-in</h2>
+<div class="cards">
+  <div class="card company">
+    <h3>If you're affected, check in</h3>
+    <ul>
+      <li>Text your manager or post in the team channel: <strong>SAFE</strong> / <strong>EVACUATED — [where you're headed]</strong> / <strong>NEED HELP</strong></li>
+      <li>Work comes second. If you're in a warning or evacuation zone, take care of your family first — no questions asked.</li>
+      <li>Keep receipts for hotels, meals, and supplies if you evacuate — for insurance and any assistance claims.</li>
+      <li><em>[Company contacts — HR phone/email and emergency policy go here. Ask Angel to fill these in.]</em></li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>🆘 Assistance &amp; recovery</h3>
+    <ul>
+      <li><strong>Dial 2-1-1</strong> or <a href="https://www.nevada211.org/" target="_blank" rel="noopener">nevada211.org</a><span class="why">Nevada's helpline for shelter, food, and local aid referrals.</span></li>
+      <li><a href="https://www.redcross.org/local/nevada.html" target="_blank" rel="noopener">Red Cross</a> — 1-800-733-2767<span class="why">Emergency lodging, supplies, recovery casework.</span></li>
+      <li><a href="https://www.disasterassistance.gov/" target="_blank" rel="noopener">DisasterAssistance.gov</a><span class="why">Federal aid — applies if a federal disaster declaration is issued.</span></li>
+      <li>Insurance: call your insurer early, photograph everything, log every conversation.</li>
+      <li><strong>⚠️ Scam warning:</strong> after fires expect fake donation pages, "FEMA inspectors" asking for money (FEMA never charges), and door-to-door contractor fraud. Verify before you pay or sign anything.</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  <p><strong>Built by Red Rock OPS for our Reno-area team.</strong> Sources compiled and verified Aug 24, 2026 (Pacific). This page aggregates official and public sources — always follow instructions from local emergency officials over anything written here.</p>
+  <p>Live panels pull from the National Weather Service and Open-Meteo every 5 minutes. Static facts (shelter status, acreage) are only as fresh as the date above — the linked sources are the ground truth.</p>
+  <p>Updates &amp; corrections: <a href="https://github.com/redrockopsllc/emergency" target="_blank" rel="noopener">github.com/redrockopsllc/emergency</a></p>
+</footer>
+
+</div>
+
+<script>
+const RENO = { lat: 39.5296, lon: -119.8138 };
+const REFRESH_MS = 5 * 60 * 1000;
+
+function nowPT() {
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles',
+    hour: 'numeric', minute: '2-digit', second: '2-digit'
+  }).format(new Date());
+}
+function stamp(id) { const el = document.getElementById(id); if (el) el.textContent = 'updated ' + nowPT(); }
+
+async function fetchAlerts() {
+  const box = document.getElementById('alerts');
+  try {
+    const r = await fetch(`https://api.weather.gov/alerts/active?point=${RENO.lat},${RENO.lon}`);
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    const feats = (data.features || []);
+    if (feats.length === 0) {
+      box.innerHTML = '<span class="ok">✅ No active NWS alerts for the Reno point right now. (Evacuation orders live on Perimeter, not here.)</span>';
+    } else {
+      box.innerHTML = feats.map(f => {
+        const p = f.properties;
+        const sev = (p.severity === 'Extreme' || p.severity === 'Severe') ? '' : ' moderate';
+        const exp = p.expires ? new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(p.expires)) : '—';
+        const desc = (p.description || '').replace(/</g, '&lt;');
+        return `<div class="alert-card${sev}">
+          <h4>${p.event || 'Alert'}</h4>
+          <div class="meta">${p.severity || ''} · until ${exp} PT</div>
+          <details><summary>Details</summary><div style="white-space:pre-wrap;margin-top:4px">${desc}</div></details>
+        </div>`;
+      }).join('');
+    }
+    stamp('alertsUpd');
+  } catch (e) {
+    box.innerHTML = '<span class="err">Couldn\'t load alerts — check <a href="https://forecast.weather.gov/MapClick.php?lat=39.5296&lon=-119.8138" target="_blank" rel="noopener">weather.gov</a> directly.</span>';
+  }
+}
+
+const AQI_BANDS = [
+  [50,  '#3dd68c', 'Good', 'Air is fine.'],
+  [100, '#f5d90a', 'Moderate', 'Unusually sensitive people should consider reducing prolonged outdoor exertion.'],
+  [150, '#f5a524', 'Unhealthy for sensitive groups', 'Kids, older adults, and anyone with heart/lung conditions should limit outdoor exertion.'],
+  [200, '#e5484d', 'Unhealthy', 'Everyone should limit prolonged outdoor exertion. Wear an N95 outside.'],
+  [300, '#a855f7', 'Very unhealthy', 'Avoid outdoor activity. Keep indoor air clean.'],
+  [9999,'#7f1d1d', 'Hazardous', 'Stay indoors with filtered air. Health warnings for everyone.']
+];
+function aqiBand(v) { return AQI_BANDS.find(b => v <= b[0]); }
+
+async function fetchAir() {
+  const box = document.getElementById('air');
+  try {
+    const r = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${RENO.lat}&longitude=${RENO.lon}&current=us_aqi,pm2_5,pm10&timezone=America%2FLos_Angeles`);
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const c = d.current;
+    const band = aqiBand(c.us_aqi);
+    box.innerHTML = `
+      <div class="aqi-big" style="color:${band[1]}">${Math.round(c.us_aqi)}</div>
+      <div class="aqi-label" style="color:${band[1]}">${band[2]} (US AQI)</div>
+      <div class="aqi-advice">${band[3]}</div>
+      <div class="small">PM2.5: ${c.pm2_5} µg/m³ · PM10: ${c.pm10} µg/m³</div>`;
+    stamp('airUpd');
+  } catch (e) {
+    box.innerHTML = '<span class="err">Couldn\'t load AQI — check <a href="https://fire.airnow.gov/" target="_blank" rel="noopener">fire.airnow.gov</a> directly.</span>';
+  }
+}
+
+function compass(deg) {
+  const dirs = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  return dirs[Math.round(deg / 22.5) % 16];
+}
+
+async function fetchWind() {
+  const box = document.getElementById('wind');
+  try {
+    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${RENO.lat}&longitude=${RENO.lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_gusts_10m,wind_direction_10m&wind_speed_unit=mph&temperature_unit=fahrenheit&timezone=America%2FLos_Angeles`);
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const c = d.current;
+    const gustWarn = c.wind_gusts_10m >= 25 ? ' <span style="color:var(--amber);font-weight:700">⚠️ gusty</span>' : '';
+    box.innerHTML = `
+      <div class="wind-big">${Math.round(c.wind_speed_10m)} mph ${compass(c.wind_direction_10m)} <span style="font-size:1rem;color:var(--muted)">gusts ${Math.round(c.wind_gusts_10m)}</span>${gustWarn}</div>
+      <div class="small">Wind blowing from the ${compass(c.wind_direction_10m)} · ${Math.round(c.temperature_2m)}°F · ${c.relative_humidity_2m}% humidity</div>
+      <div class="small">Low humidity + gusts = extreme fire behavior.</div>`;
+    stamp('windUpd');
+  } catch (e) {
+    box.innerHTML = '<span class="err">Couldn\'t load conditions — check <a href="https://forecast.weather.gov/MapClick.php?lat=39.5296&lon=-119.8138" target="_blank" rel="noopener">weather.gov</a> directly.</span>';
+  }
+}
+
+function refreshAll() {
+  document.getElementById('lastChecked').textContent = nowPT();
+  fetchAlerts(); fetchAir(); fetchWind();
+}
+refreshAll();
+setInterval(refreshAll, REFRESH_MS);
+</script>
+</body>
+</html>
