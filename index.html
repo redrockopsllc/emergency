@@ -80,6 +80,17 @@
   .video-cap{font-size:.8rem;color:var(--muted);margin-top:6px}
 
   .company{border:1px solid var(--amber);background:#211b0f}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:flex-start;justify-content:center;z-index:60;padding:16px;overflow-y:auto}
+  .overlay.show{display:flex}
+  .modal{background:var(--card2);border:1px solid var(--line);border-radius:14px;max-width:640px;width:100%;padding:18px 18px 14px;margin-top:4vh}
+  .modal h3{font-size:1.05rem;margin-bottom:4px}
+  .modal .verdict{font-size:.92rem;background:#123b2a;border:1px solid var(--green);border-radius:8px;padding:9px 11px;margin:10px 0}
+  .modal ul{list-style:none;margin:6px 0}
+  .modal li{padding:6px 0;font-size:.9rem;border-top:1px solid var(--line)}
+  .modal li:first-child{border-top:none}
+  .modal .close-btn{background:var(--red);color:#fff;border:0;border-radius:8px;padding:11px 16px;font-weight:700;font-size:.9rem;cursor:pointer;width:100%;margin-top:10px}
+  .chgbtn{background:var(--card);border:1px solid var(--line);color:var(--link);border-radius:8px;padding:6px 12px;font-size:.8rem;font-weight:600;cursor:pointer;margin-top:8px}
+  .chgbtn:hover{border-color:var(--link)}
   footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
   footer p{margin-bottom:6px}
   @media (max-width:480px){ header h1{font-size:1.2rem} .btn{flex-basis:100%} }
@@ -92,6 +103,7 @@
   <h1>🔥 Hawk Fire — Reno Emergency Dashboard</h1>
   <div class="sub">Red Rock OPS · live resources for our Reno-area team · Washoe &amp; Sierra counties</div>
   <div class="stamp">Live data refreshes every 5 minutes · Last checked: <strong id="lastChecked">loading…</strong> (Pacific)</div>
+  <button class="chgbtn" onclick="openChanges()">📋 What changed since yesterday</button>
 </header>
 
 <div class="banner">
@@ -153,17 +165,22 @@
   </div>
 </div>
 
-<h2 class="section">▶️ Live video updates</h2>
+<h2 class="section">▶️ Hawk Fire video updates <span style="font-weight:400;font-size:.8rem;color:var(--muted)">(this fire only — curated Aug 25 morning)</span></h2>
 <div class="video-grid">
   <div>
-    <div class="video-wrap"><iframe src="https://www.youtube.com/embed/videoseries?list=UU_opcefdzIh27TitnW4_WTw" title="Severe Weather USA — latest videos" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
-    <div class="video-cap">▶️ <a href="https://www.youtube.com/@SevereWeatherUSA" target="_blank" rel="noopener">Severe Weather USA</a> — always shows the channel's newest uploads. Tap the ☰ playlist icon in the player for more videos.</div>
+    <div class="video-wrap"><iframe src="https://www.youtube.com/embed/BxLidwFp6ew" title="BBC News — Hawk Fire expected to burn two more days" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
+    <div class="video-cap">▶️ BBC News — officials expect the fire to burn ~2 more days <em>(posted Tue morning)</em></div>
   </div>
   <div>
-    <div class="video-wrap"><iframe src="https://www.youtube.com/embed/videoseries?list=UUOHOdDLbi3q_FuN49ncab5Q" title="KOLO 8 News Now — latest videos" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
-    <div class="video-cap">▶️ <a href="https://www.youtube.com/@KOLO8NewsNow" target="_blank" rel="noopener">KOLO 8 News Now</a> — Reno's local coverage, newest uploads first.</div>
+    <div class="video-wrap"><iframe src="https://www.youtube.com/embed/TlQe9JuIGus" title="FOX Weather — Hawk Fire containment grows near Reno" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
+    <div class="video-cap">▶️ FOX Weather — containment grows, thousands still evacuated <em>(posted Tue morning)</em></div>
+  </div>
+  <div>
+    <div class="video-wrap"><iframe src="https://www.youtube.com/embed/ZY5_TtqtA0s" title="Severe Weather USA — Hawk Fire near Reno" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>
+    <div class="video-cap">▶️ <a href="https://www.youtube.com/@SevereWeatherUSA" target="_blank" rel="noopener">Severe Weather USA</a> — Hawk Fire breakdown <em>(posted Mon)</em></div>
   </div>
 </div>
+<div class="video-cap" style="margin-top:8px">🔎 <a href="https://www.youtube.com/results?search_query=hawk+fire+reno&sp=CAI%253D" target="_blank" rel="noopener"><strong>See the very latest Hawk Fire videos on YouTube</strong></a> — sorted newest-first, always current.</div>
 
 <h2 class="section">🗺️ Live fire tracking</h2>
 <div class="cards">
@@ -355,6 +372,37 @@
 </footer>
 
 </div>
+
+<div class="overlay" id="changesOverlay" role="dialog" aria-modal="true" aria-label="What changed since yesterday">
+  <div class="modal">
+    <h3>📋 What changed: Mon Aug 24 → Tue Aug 25</h3>
+    <div class="small" style="color:var(--muted)">Compared against yesterday's verified snapshot · updated Tue morning (Pacific)</div>
+    <div class="verdict">Overall: <strong>trending better.</strong> Containment jumped from 0% to 27% and some evacuation orders were downgraded overnight — but it is not over: orders remain active in parts of Washoe County and damage counts are still climbing.</div>
+    <ul>
+      <li>✅ <strong>Containment: 0% → 27%</strong> — the first real containment since the fire started Saturday.</li>
+      <li>✅ <strong>Some evacuation orders downgraded</strong> as crews held lines overnight — check your exact zone on <a href="https://perimetermap.com/data/142-162943-polygon" target="_blank" rel="noopener">Perimeter</a> before returning.</li>
+      <li>✅ <strong>Growth nearly stopped</strong> — ~15,000 → 15,067 acres, barely moving in 24 hours.</li>
+      <li>✅ <strong>UNR resumed normal operations</strong> Tuesday.</li>
+      <li>⚠️ <strong>First damage counts: 32 homes destroyed, 6 damaged</strong> — expected to rise as assessment teams keep working.</li>
+      <li>⚠️ <strong>WCSD schools closed again Tuesday</strong> — all except Gerlach K-12 and Incline Village.</li>
+      <li>⚠️ Officials expect the fire to burn for <strong>roughly two more days</strong>.</li>
+      <li>➖ <strong>Shelters unchanged:</strong> Convention Center Hall 4 open; Evelyn Mount at capacity (evacuation point).</li>
+      <li>➖ <strong>Sierra County warnings unchanged</strong> (SIE-E024 &amp; SIE-E061) · state of emergency and National Guard continue.</li>
+    </ul>
+    <button class="close-btn" onclick="closeChanges()">Got it — take me to the dashboard</button>
+  </div>
+</div>
+
+<script>
+const CHANGES_DATE = '2026-08-25';
+function openChanges() { document.getElementById('changesOverlay').classList.add('show'); }
+function closeChanges() {
+  document.getElementById('changesOverlay').classList.remove('show');
+  try { localStorage.setItem('changesSeen', CHANGES_DATE); } catch (e) {}
+}
+document.getElementById('changesOverlay').addEventListener('click', e => { if (e.target.id === 'changesOverlay') closeChanges(); });
+try { if (localStorage.getItem('changesSeen') !== CHANGES_DATE) openChanges(); } catch (e) { openChanges(); }
+</script>
 
 <script>
 const RENO = { lat: 39.5296, lon: -119.8138 };
