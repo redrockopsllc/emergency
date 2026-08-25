@@ -39,7 +39,7 @@ The page has two layers:
 - [ ] Fill in the company contact placeholders in the "Red Rock OPS team
       check-in" card (HR phone/email, emergency policy line).
 
-## Sources verified 2026-08-24
+## Sources verified 2026-08-24, refreshed 2026-08-25
 
 Perimeter (perimetermap.com), EmergencyWashoe.com, Washoe County Regional
 Alerts, KOLO 8 resource list, KUNR live blog, NWS Reno. Always follow local
